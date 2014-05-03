@@ -2,18 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a2dac63d-25c1-453c-ab2c-a2062175c2f1" name="Default" comment="">
-      <change type="DELETED" beforePath="C:\Users\bjordan\Documents\GitHub\thegoldenmule\raphael.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Main.js" afterPath="$PROJECT_DIR$/Main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/style.css" afterPath="$PROJECT_DIR$/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="thegoldenmule.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/index.html" changelist="a2dac63d-25c1-453c-ab2c-a2062175c2f1" time="1399128336395" ignored="false" />
     <file path="/style.css" changelist="a2dac63d-25c1-453c-ab2c-a2062175c2f1" time="1399128570308" ignored="false" />
-    <file path="/Main.js" changelist="a2dac63d-25c1-453c-ab2c-a2062175c2f1" time="1399142981147" ignored="false" />
+    <file path="/Main.js" changelist="a2dac63d-25c1-453c-ab2c-a2062175c2f1" time="1399161209052" ignored="false" />
     <file path="/Dummy.txt" changelist="a2dac63d-25c1-453c-ab2c-a2062175c2f1" time="1399128161566" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -46,7 +42,7 @@
       <file leaf-file-name="Main.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="80" selection-start="944" selection-end="944" vertical-scroll-proportion="0.23367697">
+            <state line="232" column="14" selection-start="6395" selection-end="6395" vertical-scroll-proportion="0.72279495">
               <folding />
             </state>
           </provider>
@@ -319,7 +315,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="80" selection-start="944" selection-end="944" vertical-scroll-proportion="0.23367697">
+        <state line="232" column="14" selection-start="6395" selection-end="6395" vertical-scroll-proportion="0.72279495">
           <folding />
         </state>
       </provider>
