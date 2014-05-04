@@ -80,28 +80,44 @@ if (!Function.prototype.bind) {
             .click(click);
     }
 
-    function Timeline(loader) {
-        this.rect;
+    function Timeline(loader, paper, width, height) {
+        this.loader = loader;
+        this.paper = paper;
+
         this.positions = [];
         this.links = [];
         this.allKeys = [];
         this.path;
-        this.paper;
 
-        this.width = 1000;
-        this.height = 600;
+        this.width = width;
+        this.height = height;
         this.twidth = 50;
         this.perPage = 17;
         this.currentPage = -1;
         this.transitioningOut = false;
 
-        this.paper = Raphael('content', this.width, this.height);
-        this.rect = this.paper.rect(0, 0, this.width, this.height, 50).attr({fill:'#111', stroke:'none'});
-
-        loader.load(this.onLoaded.bind(this));
+        this._isLoaded = false;
+        this._isLoading = false;
     }
 
+    Timeline.prototype.show = function() {
+        if (this._isLoaded) {
+
+        } else if (!this._isLoading) {
+            this._isLoading = true;
+
+            this.loader.load(this.onLoaded.bind(this));
+        }
+    };
+
+    Timeline.prototype.hide = function() {
+
+    };
+
     Timeline.prototype.onLoaded = function(keys) {
+        this._isLoaded = true;
+        this._isLoading = false;
+
         this.allKeys = keys;
 
         var that = this;
@@ -273,8 +289,8 @@ if (!Function.prototype.bind) {
                     'stroke' : '#FFF',
                     'stroke-width': 4,
                     'stroke-linecap' : 'round'
-                })
-                .insertAfter(this.rect);
+                });
+                //.insertAfter(this.rect);
         }
 
         this.path.animate({
@@ -325,14 +341,30 @@ if (!Function.prototype.bind) {
 (function(global) {
 
     global.initialize = function() {
-        new Main();
+        new Main(1000, 600);
     }
 
-    function Main() {
+    function Main(width, height) {
+        this.width = width;
+        this.height = height;
+
+        this.paper = Raphael('content', this.width, this.height);
+        this.rect = this.paper.rect(0, 0, this.width, this.height, 50).attr({fill:'#111', stroke:'none'});
+
         this.timelines = [
-            new Timeline(new FeedLoader('http://thegoldenmule.com/blog/', 'http://thegoldenmule.com/blog/feed/')),
-            new Timeline(new FeedLoader('http://thegoldenmule.svbtle.com/', 'http://thegoldenmule.svbtle.com/feed'))
+            new Timeline(
+                new FeedLoader('http://thegoldenmule.com/blog/', 'http://thegoldenmule.com/blog/feed/'),
+                this.paper,
+                this.width,
+                this.height),
+            new Timeline(
+                new FeedLoader('http://thegoldenmule.svbtle.com/', 'http://thegoldenmule.svbtle.com/feed'),
+                this.paper,
+                this.width,
+                this.height)
         ];
+
+        this.timelines[0].show();
     }
 
 })(this);
