@@ -48,9 +48,40 @@ if (!Function.prototype.bind) {
         return title;
     }
 
-    function Timeline(url, feedPath) {
+    function addHandlers(link, key){
+        var animateMS = 50;
+        var circle = link.circle;
+        var title = link.title;
+
+        // handlers
+        var mouseOver = function() {
+            circle.stop().animate({
+                transform:'s2'
+            }, animateMS);
+        };
+
+        var mouseOut = function() {
+            circle.stop().animate({
+                transform:'s1'
+            }, animateMS);
+        };
+
+        var click = function (){
+            window.open(key.link);
+        };
+
+        circle
+            .mouseover(mouseOver)
+            .mouseout(mouseOut)
+            .click(click);
+        title
+            .mouseover(mouseOver)
+            .mouseout(mouseOut)
+            .click(click);
+    }
+
+    function Timeline(loader) {
         this.rect;
-        this.entries = [];
         this.positions = [];
         this.links = [];
         this.allKeys = [];
@@ -64,31 +95,19 @@ if (!Function.prototype.bind) {
         this.currentPage = -1;
         this.transitioningOut = false;
 
-        this.feed = new google.feeds.Feed(feedPath);
-
-        this.feed.setNumEntries(10000);
-
-        var that = this;
-        this.feed.load(function(result) {
-            that.onFeedLoaded(result);
-        });
-    }
-
-    Timeline.prototype.onFeedLoaded = function(result) {
-        if (result.error) {
-            return;
-        }
-
-        this.entries = result.feed.entries;
-
         this.paper = Raphael('content', this.width, this.height);
         this.rect = this.paper.rect(0, 0, this.width, this.height, 50).attr({fill:'#111', stroke:'none'});
+
+        loader.load(this.onLoaded.bind(this));
+    }
+
+    Timeline.prototype.onLoaded = function(keys) {
+        this.allKeys = keys;
 
         var that = this;
 
         // next button
-        var animateMS = 50;
-        var next = this.paper
+        this.paper
             .path('M11.166,23.963L22.359,17.5c1.43-0.824,1.43-2.175,0-3L11.166,8.037c-1.429-0.826-2.598-0.15-2.598,1.5v12.926C8.568,24.113,9.737,24.789,11.166,23.963z')
             .attr({
                 fill : '#FFF'
@@ -99,7 +118,7 @@ if (!Function.prototype.bind) {
             });
 
         // previous button
-        var previous = this.paper
+        this.paper
             .path('M20.834,8.037L9.641,14.5c-1.43,0.824-1.43,2.175,0,3l11.193,6.463c1.429,0.826,2.598,0.15,2.598-1.5V9.537C23.432,7.887,22.263,7.211,20.834,8.037z')
             .attr({
                 fill : '#FFF'
@@ -110,7 +129,7 @@ if (!Function.prototype.bind) {
             });
 
         // down button
-        var down = this.paper
+        this.paper
             .path('M8.037,11.166L14.5,22.359c0.825,1.43,2.175,1.43,3,0l6.463-11.194c0.826-1.429,0.15-2.598-1.5-2.598H9.537C7.886,8.568,7.211,9.737,8.037,11.166z')
             .attr({
                 fill : '#FFF'
@@ -119,15 +138,6 @@ if (!Function.prototype.bind) {
             .click(function() {
                 window.scroll(0, 600);
             });
-
-        // create keys
-        this.allKeys = [];
-        for (var i = 0, len = this.entries.length; i < len; i++) {
-            this.allKeys.push({
-                title:this.entries[i].title,
-                link:this.entries[i].link
-            });
-        }
 
         this.showPage(0);
     };
@@ -192,7 +202,6 @@ if (!Function.prototype.bind) {
     };
 
     Timeline.prototype.setKeys = function(keys) {
-        var animateMS = 50;
         var circleRadius = 10;
         var attr = {
             font: '16px Helvetica',
@@ -228,45 +237,14 @@ if (!Function.prototype.bind) {
                     opacity: 0
                 });
 
-            this.links.push({
+            var link = {
                 title:title,
                 circle:circle
-            });
+            };
+            this.links.push(link);
 
-            // handlers
-            var mouseOver = (function() {
-                var handle = circle;
-                return function() {
-                    handle.stop().animate({
-                        transform:'s2'
-                    }, animateMS);
-                };
-            })();
-
-            var mouseOut = (function() {
-                var handle = circle;
-                return function() {
-                    handle.stop().animate({
-                        transform:'s1'
-                    }, animateMS);
-                };
-            })();
-
-            var click = (function() {
-                var key = keys[i];
-                return function (){
-                    window.open(key.link);
-                };
-            })();
-
-            circle
-                .mouseover(mouseOver)
-                .mouseout(mouseOut)
-                .click(click);
-            title
-                .mouseover(mouseOver)
-                .mouseout(mouseOut)
-                .click(click);
+            // add event handlers
+            addHandlers(link, keys[i]);
         }
 
         var animationDelayMS = 20;
@@ -310,14 +288,50 @@ if (!Function.prototype.bind) {
 
 (function(global) {
 
+    function FeedLoader(url, feedUrl) {
+        this.url = url;
+        this.feedUrl = feedUrl;
+    }
+
+    FeedLoader.prototype.load = function(callback) {
+        this.feed = new google.feeds.Feed(this.feedUrl);
+        this.feed.setNumEntries(10000);
+
+        var that = this;
+        this.feed.load(function(result) {
+            if (result.error) {
+                return;
+            }
+
+            var entries = result.feed.entries;
+
+            // create keys
+            var keys = [];
+            for (var i = 0, len = entries.length; i < len; i++) {
+                keys.push({
+                    title: entries[i].title,
+                    link: entries[i].link
+                });
+            }
+
+            callback(keys);
+        });
+    };
+
+    global.FeedLoader = FeedLoader;
+
+})(this);
+
+(function(global) {
+
     global.initialize = function() {
         new Main();
     }
 
     function Main() {
         this.timelines = [
-            new Timeline('http://thegoldenmule.com/blog/', 'http://thegoldenmule.com/blog/feed/'),
-            new Timeline('http://thegoldenmule.svbtle.com/', 'http://thegoldenmule.svbtle.com/feed')
+            new Timeline(new FeedLoader('http://thegoldenmule.com/blog/', 'http://thegoldenmule.com/blog/feed/')),
+            new Timeline(new FeedLoader('http://thegoldenmule.svbtle.com/', 'http://thegoldenmule.svbtle.com/feed'))
         ];
     }
 
