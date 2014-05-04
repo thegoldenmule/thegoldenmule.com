@@ -3,13 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="a2dac63d-25c1-453c-ab2c-a2062175c2f1" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Main.js" afterPath="$PROJECT_DIR$/Main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="thegoldenmule.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/index.html" changelist="a2dac63d-25c1-453c-ab2c-a2062175c2f1" time="1399128336395" ignored="false" />
     <file path="/style.css" changelist="a2dac63d-25c1-453c-ab2c-a2062175c2f1" time="1399128570308" ignored="false" />
-    <file path="/Main.js" changelist="a2dac63d-25c1-453c-ab2c-a2062175c2f1" time="1399161209052" ignored="false" />
+    <file path="/Main.js" changelist="a2dac63d-25c1-453c-ab2c-a2062175c2f1" time="1399181602341" ignored="false" />
     <file path="/Dummy.txt" changelist="a2dac63d-25c1-453c-ab2c-a2062175c2f1" time="1399128161566" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,7 +41,7 @@
       <file leaf-file-name="Main.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="232" column="14" selection-start="6395" selection-end="6395" vertical-scroll-proportion="0.72279495">
+            <state line="155" column="17" selection-start="4653" selection-end="4653" vertical-scroll-proportion="0.17640321">
               <folding />
             </state>
           </provider>
@@ -202,7 +201,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.14514408" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.14514408" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -315,7 +314,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="232" column="14" selection-start="6395" selection-end="6395" vertical-scroll-proportion="0.72279495">
+        <state line="155" column="17" selection-start="4653" selection-end="4653" vertical-scroll-proportion="0.17640321">
           <folding />
         </state>
       </provider>

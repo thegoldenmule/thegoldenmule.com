@@ -22,13 +22,13 @@ function Timeline(url, feedPath) {
     this.allKeys = [];
     this.path;
     this.paper;
-    this.disableInput = false;
 
     this.width = 1000;
     this.height = 600;
     this.twidth = 50;
     this.perPage = 17;
     this.currentPage = -1;
+    this.transitioningOut = false;
 
     this.feed = new google.feeds.Feed(feedPath);
 
@@ -42,33 +42,37 @@ function Timeline(url, feedPath) {
             that.rect = that.paper.rect(0, 0, that.width, that.height, 50).attr({fill:'#111', stroke:'none'});
 
             // next button
-            that.paper
+            var animateMS = 50;
+            var next = that.paper
                 .path('M11.166,23.963L22.359,17.5c1.43-0.824,1.43-2.175,0-3L11.166,8.037c-1.429-0.826-2.598-0.15-2.598,1.5v12.926C8.568,24.113,9.737,24.789,11.166,23.963z')
                 .attr({
                     fill : '#FFF'
                 })
                 .transform('T' + (that.width - that.twidth) + ',' + (that.height / 2))
                 .click(function(){
-                    if (that.disableInput) {
-                        return;
-                    }
-
                     that.showPage(that.currentPage + 1);
                 });
 
             // previous button
-            that.paper
+            var previous = that.paper
                 .path('M20.834,8.037L9.641,14.5c-1.43,0.824-1.43,2.175,0,3l11.193,6.463c1.429,0.826,2.598,0.15,2.598-1.5V9.537C23.432,7.887,22.263,7.211,20.834,8.037z')
                 .attr({
                     fill : '#FFF'
                 })
                 .transform('T' + that.twidth / 2 + ',' + (that.height / 2))
                 .click(function(){
-                    if (that.disableInput) {
-                        return;
-                    }
-
                     that.showPage(that.currentPage - 1);
+                });
+
+            // down button
+            var down = that.paper
+                .path('M8.037,11.166L14.5,22.359c0.825,1.43,2.175,1.43,3,0l6.463-11.194c0.826-1.429,0.15-2.598-1.5-2.598H9.537C7.886,8.568,7.211,9.737,8.037,11.166z')
+                .attr({
+                    fill : '#FFF'
+                })
+                .transform('T' + that.width / 2 + ',' + (that.height - that.twidth))
+                .click(function() {
+
                 });
 
             // create keys
@@ -86,9 +90,14 @@ function Timeline(url, feedPath) {
 }
 
 Timeline.prototype.showPage = function(page) {
+    if (this.transitioningOut) {
+        return;
+    }
 
     var that = this;
     function transitionOut() {
+        that.transitioningOut = true;
+
         var numCalls = 0;
         function callback() {
             if (++numCalls === that.links.length + 1) {
@@ -105,17 +114,17 @@ Timeline.prototype.showPage = function(page) {
 
         var tweenMS = 500;
         var delayMS = 20;
-        var animation = Raphael.animation({"opacity" : 0}, tweenMS, callback);
+        var animation = Raphael.animation({'opacity' : 0}, tweenMS, callback);
         for (var i = 0, len = that.links.length; i < len; i++) {
             var delayedAnimation = animation.delay(i * delayMS);
             that.links[i].circle.stop().animate(delayedAnimation);
             that.links[i].title.stop().animate(delayedAnimation);
         }
-
-        that.path.stop().animate(animation);
     }
 
     function transitionIn() {
+        that.transitioningOut = false;
+
         that.currentPage = page;
 
         that.setKeys(that.allKeys.slice(
@@ -124,14 +133,12 @@ Timeline.prototype.showPage = function(page) {
         ));
     }
 
-    var numPages = Math.ceil(this.allKeys.length / this.perPage);
+    var numPages = Math.floor(this.allKeys.length / this.perPage);
     page = page < 0 ? 0 : page > numPages ? numPages : page;
 
     if (page === this.currentPage) {
         return;
     }
-
-    this.disableInput = true;
 
     if (-1 !== this.currentPage) {
         transitionOut();
@@ -141,11 +148,19 @@ Timeline.prototype.showPage = function(page) {
     }
 };
 
+function formatTitle(title) {
+    if (title.length > 45) {
+        return title.slice(0, 45) + "...";
+    }
+
+    return title;
+}
+
 Timeline.prototype.setKeys = function(keys) {
     var animateMS = 50;
     var circleRadius = 10;
     var attr = {
-        font: '18px Helvetica',
+        font: '16px Helvetica',
         opacity: 0.5
     };
 
@@ -155,12 +170,12 @@ Timeline.prototype.setKeys = function(keys) {
     for (var i = 0, len = keys.length; i < len; i++) {
         var x = ((i + 2) * this.twidth);
 
-        var title = this.paper.text(0, 0, keys[i].title)
+        var title = this.paper.text(0, 0, formatTitle(keys[i].title))
             .attr(attr)
             .attr(
             {
                 fill: '#FFF',
-                transform: 'R-90' + 'T' + x + ',' + this.height / 2
+                transform: 'T' + x + ',' + this.height / 2 + 'R-90'
             });
 
         var bbox = title.getBBox();
@@ -218,19 +233,11 @@ Timeline.prototype.setKeys = function(keys) {
             .click(click);
     }
 
-    var numAnimations = 0;
-    var that = this;
-    function callback() {
-        if (++numAnimations === that.links.length) {
-            that.disableInput = false;
-        }
-    }
-
     var animationDelayMS = 20;
     for (var i = 0, len = this.links.length; i < len; i++) {
         var animation = Raphael.animation({
             'opacity' : 1
-        }, 500, callback);
+        }, 500);
         this.links[i].circle.animate(animation.delay(i * animationDelayMS));
     }
 
@@ -256,12 +263,9 @@ Timeline.prototype.updatePath = function() {
             .insertAfter(this.rect);
     }
 
-    this.path.attr({
-        'path' : flatPathString
-    });
     this.path.animate({
-        "path" : splinePathString,
-        "opacity" : 1
+        'path' : splinePathString,
+        'opacity' : 1
     }, 200);
 };
 
