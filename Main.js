@@ -80,13 +80,13 @@ if (!Function.prototype.bind) {
             .click(click);
     }
 
-    function Timeline(loader, paper, width, height) {
-        this.loader = loader;
+    function Timeline(paper, width, height) {
         this.paper = paper;
 
         this.positions = [];
         this.links = [];
         this.allKeys = [];
+        this.model;
         this.path;
 
         this.width = width;
@@ -95,30 +95,11 @@ if (!Function.prototype.bind) {
         this.perPage = 17;
         this.currentPage = -1;
         this.transitioningOut = false;
-
-        this._isLoaded = false;
-        this._isLoading = false;
     }
 
-    Timeline.prototype.show = function() {
-        if (this._isLoaded) {
-
-        } else if (!this._isLoading) {
-            this._isLoading = true;
-
-            this.loader.load(this.onLoaded.bind(this));
-        }
-    };
-
-    Timeline.prototype.hide = function() {
-
-    };
-
-    Timeline.prototype.onLoaded = function(keys) {
-        this._isLoaded = true;
-        this._isLoading = false;
-
-        this.allKeys = keys;
+    Timeline.prototype.populate = function(model) {
+        this.model = model;
+        this.allKeys = model.groups[0].keys;
 
         var that = this;
 
@@ -304,7 +285,20 @@ if (!Function.prototype.bind) {
 
 (function(global) {
 
-    function FeedLoader(url, feedUrl) {
+    function FeedData(name, url, keys) {
+        this.name = name;
+        this.url = url;
+        this.keys = keys;
+    }
+
+    global.FeedData = FeedData;
+
+})(this);
+
+(function(global) {
+
+    function FeedLoader(name, url, feedUrl) {
+        this.name = name;
         this.url = url;
         this.feedUrl = feedUrl;
     }
@@ -330,7 +324,7 @@ if (!Function.prototype.bind) {
                 });
             }
 
-            callback(keys);
+            callback(new FeedData(that.name, that.url, keys));
         });
     };
 
@@ -340,9 +334,23 @@ if (!Function.prototype.bind) {
 
 (function(global) {
 
+    function Model() {
+        this.groups = [];
+    }
+
+    Model.prototype.add = function(data) {
+        this.groups.push(data);
+    };
+
+    global.Model = Model;
+
+})(this);
+
+(function(global) {
+
     global.initialize = function() {
         new Main(1000, 600);
-    }
+    };
 
     function Main(width, height) {
         this.width = width;
@@ -351,20 +359,34 @@ if (!Function.prototype.bind) {
         this.paper = Raphael('content', this.width, this.height);
         this.rect = this.paper.rect(0, 0, this.width, this.height, 50).attr({fill:'#111', stroke:'none'});
 
-        this.timelines = [
-            new Timeline(
-                new FeedLoader('http://thegoldenmule.com/blog/', 'http://thegoldenmule.com/blog/feed/'),
-                this.paper,
-                this.width,
-                this.height),
-            new Timeline(
-                new FeedLoader('http://thegoldenmule.svbtle.com/', 'http://thegoldenmule.svbtle.com/feed'),
-                this.paper,
-                this.width,
-                this.height)
+        this.timeline = new Timeline(this.paper, this.width, this.height);
+
+        var loaders = [
+            new FeedLoader('Tech', 'http://thegoldenmule.com/blog/', 'http://thegoldenmule.com/blog/feed/'),
+            new FeedLoader('Thoughts', 'http://thegoldenmule.svbtle.com/', 'http://thegoldenmule.svbtle.com/feed')
         ];
 
-        this.timelines[0].show();
+        var that = this;
+        this.load(loaders, function(model) {
+            that.timeline.populate(model);
+        });
     }
+
+    Main.prototype.load = function(loaders, callback) {
+        var model = new Model();
+
+        var numLoaded = 0;
+        function onLoaded(data) {
+            model.add(data);
+
+            if (++numLoaded === loaders.length) {
+                callback(model);
+            }
+        }
+
+        for (var i = 0, len = loaders.length; i < len; i++) {
+            loaders[i].load(onLoaded);
+        }
+    };
 
 })(this);
