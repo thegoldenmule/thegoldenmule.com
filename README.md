@@ -1,4 +1,4 @@
 thegoldenmule.com
 =================
 
-The root of my site.
+![Screen shot](screenshot.png)
