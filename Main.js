@@ -82,24 +82,74 @@ if (!Function.prototype.bind) {
 
     function Timeline(paper, width, height) {
         this.paper = paper;
-
-        this.positions = [];
-        this.links = [];
-        this.allKeys = [];
-        this.model;
-        this.path;
-
         this.width = width;
         this.height = height;
         this.twidth = 50;
         this.perPage = 17;
+
+        this.positions = [];
+        this.links = [];
+        this.allKeys = [];
+
+        this.model;
+        this.path;
+
+        this.currentFeed;
         this.currentPage = -1;
         this.transitioningOut = false;
     }
 
     Timeline.prototype.populate = function(model) {
         this.model = model;
-        this.allKeys = model.groups[0].keys;
+        this.showFeed(model.groups[0]);
+    };
+
+    Timeline.prototype._transitionOut = function(page, callback) {
+        this.transitioningOut = true;
+
+        var that = this;
+        var numCalls = 0;
+        function onAnimationComplete() {
+            if (++numCalls === that.links.length + 1) {
+                // remove them all
+                for (var i = 0, len = that.links.length; i < len; i++) {
+                    that.links[i].circle.remove();
+                    that.links[i].title.remove();
+                }
+                that.links = [];
+
+                callback();
+            }
+        }
+
+        var tweenMS = 500;
+        var delayMS = 20;
+        var animation = Raphael.animation({'opacity' : 0}, tweenMS, onAnimationComplete);
+        for (var i = 0, len = this.links.length; i < len; i++) {
+            var delayedAnimation = animation.delay(i * delayMS);
+            this.links[i].circle.stop().animate(delayedAnimation);
+            this.links[i].title.stop().animate(delayedAnimation);
+        }
+    };
+
+    Timeline.prototype._transitionIn = function(page) {
+        this.transitioningOut = false;
+
+        this.currentPage = page;
+
+        this.setKeys(this.allKeys.slice(
+            this.currentPage * this.perPage,
+            (this.currentPage + 1) * this.perPage
+        ));
+    };
+
+    Timeline.prototype.showFeed = function(feedData) {
+        if (this.currentFeed) {
+
+        }
+
+        this.currentFeed = feedData;
+        this.allKeys = feedData.keys;
 
         var that = this;
 
@@ -144,45 +194,6 @@ if (!Function.prototype.bind) {
             return;
         }
 
-        var that = this;
-        function transitionOut() {
-            that.transitioningOut = true;
-
-            var numCalls = 0;
-            function callback() {
-                if (++numCalls === that.links.length + 1) {
-                    // remove them all
-                    for (var i = 0, len = that.links.length; i < len; i++) {
-                        that.links[i].circle.remove();
-                        that.links[i].title.remove();
-                    }
-                    that.links = [];
-
-                    transitionIn();
-                }
-            }
-
-            var tweenMS = 500;
-            var delayMS = 20;
-            var animation = Raphael.animation({'opacity' : 0}, tweenMS, callback);
-            for (var i = 0, len = that.links.length; i < len; i++) {
-                var delayedAnimation = animation.delay(i * delayMS);
-                that.links[i].circle.stop().animate(delayedAnimation);
-                that.links[i].title.stop().animate(delayedAnimation);
-            }
-        }
-
-        function transitionIn() {
-            that.transitioningOut = false;
-
-            that.currentPage = page;
-
-            that.setKeys(that.allKeys.slice(
-                that.currentPage * that.perPage,
-                (that.currentPage + 1) * that.perPage
-            ));
-        }
-
         var numPages = Math.floor(this.allKeys.length / this.perPage);
         page = page < 0 ? 0 : page > numPages ? numPages : page;
 
@@ -190,11 +201,16 @@ if (!Function.prototype.bind) {
             return;
         }
 
+        var that = this;
         if (-1 !== this.currentPage) {
-            transitionOut();
+            this._transitionOut(
+                page,
+                function() {
+                    that._transitionIn(page);
+                });
         }
         else {
-            transitionIn();
+            this._transitionIn(page);
         }
     };
 

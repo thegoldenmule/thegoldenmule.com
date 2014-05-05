@@ -3,13 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="a2dac63d-25c1-453c-ab2c-a2062175c2f1" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Main.js" afterPath="$PROJECT_DIR$/Main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
     </list>
     <ignored path="thegoldenmule.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/index.html" changelist="a2dac63d-25c1-453c-ab2c-a2062175c2f1" time="1399240888699" ignored="false" />
     <file path="/style.css" changelist="a2dac63d-25c1-453c-ab2c-a2062175c2f1" time="1399128570308" ignored="false" />
-    <file path="/Main.js" changelist="a2dac63d-25c1-453c-ab2c-a2062175c2f1" time="1399256610046" ignored="false" />
+    <file path="/Main.js" changelist="a2dac63d-25c1-453c-ab2c-a2062175c2f1" time="1399258107288" ignored="false" />
     <file path="/Dummy.txt" changelist="a2dac63d-25c1-453c-ab2c-a2062175c2f1" time="1399128161566" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,7 +41,7 @@
       <file leaf-file-name="Main.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="326" column="55" selection-start="9315" selection-end="9315" vertical-scroll-proportion="0.91752577">
+            <state line="216" column="4" selection-start="6100" selection-end="6100" vertical-scroll-proportion="0.58533794">
               <folding />
             </state>
           </provider>
@@ -315,7 +314,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="326" column="55" selection-start="9315" selection-end="9315" vertical-scroll-proportion="0.91752577">
+        <state line="216" column="4" selection-start="6100" selection-end="6100" vertical-scroll-proportion="0.58533794">
           <folding />
         </state>
       </provider>
