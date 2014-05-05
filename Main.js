@@ -97,59 +97,6 @@ if (!Function.prototype.bind) {
         this.currentFeed;
         this.currentPage = -1;
         this.transitioningOut = false;
-    }
-
-    Timeline.prototype.populate = function(model) {
-        this.model = model;
-        this.showFeed(model.groups[0]);
-    };
-
-    Timeline.prototype._transitionOut = function(page, callback) {
-        this.transitioningOut = true;
-
-        var that = this;
-        var numCalls = 0;
-        function onAnimationComplete() {
-            if (++numCalls === that.links.length + 1) {
-                // remove them all
-                for (var i = 0, len = that.links.length; i < len; i++) {
-                    that.links[i].circle.remove();
-                    that.links[i].title.remove();
-                }
-                that.links = [];
-
-                callback();
-            }
-        }
-
-        var tweenMS = 500;
-        var delayMS = 20;
-        var animation = Raphael.animation({'opacity' : 0}, tweenMS, onAnimationComplete);
-        for (var i = 0, len = this.links.length; i < len; i++) {
-            var delayedAnimation = animation.delay(i * delayMS);
-            this.links[i].circle.stop().animate(delayedAnimation);
-            this.links[i].title.stop().animate(delayedAnimation);
-        }
-    };
-
-    Timeline.prototype._transitionIn = function(page) {
-        this.transitioningOut = false;
-
-        this.currentPage = page;
-
-        this.setKeys(this.allKeys.slice(
-            this.currentPage * this.perPage,
-            (this.currentPage + 1) * this.perPage
-        ));
-    };
-
-    Timeline.prototype.showFeed = function(feedData) {
-        if (this.currentFeed) {
-
-        }
-
-        this.currentFeed = feedData;
-        this.allKeys = feedData.keys;
 
         var that = this;
 
@@ -183,8 +130,46 @@ if (!Function.prototype.bind) {
             })
             .transform('T' + this.width / 2 + ',' + (this.height - this.twidth))
             .click(function() {
-                window.scroll(0, 600);
+                var index = that.model.groups.indexOf(that.currentFeed);
+                if (index < that.model.groups.length - 1){
+                    that._transitionOut(
+                        function() {
+                            that.showFeed(that.model.groups[index + 1]);
+                        });
+                }
             });
+
+        // up button
+        this.paper
+            .path('M23.963,20.834L17.5,9.64c-0.825-1.429-2.175-1.429-3,0L8.037,20.834c-0.825,1.429-0.15,2.598,1.5,2.598h12.926C24.113,23.432,24.788,22.263,23.963,20.834z')
+            .attr({
+                fill : '#FFF'
+            })
+            .transform('T' + this.width / 2 + ',' + this.twidth)
+            .click(function() {
+                var index = that.model.groups.indexOf(that.currentFeed);
+                if (index > 0){
+                    that._transitionOut(
+                        function() {
+                            that.showFeed(that.model.groups[index - 1]);
+                        });
+                }
+            });
+    }
+
+    Timeline.prototype.populate = function(model) {
+        this.model = model;
+        this.showFeed(model.groups[0]);
+    };
+
+    Timeline.prototype.showFeed = function(feedData) {
+        if (this.currentFeed) {
+
+        }
+
+        this.currentPage = -1;
+        this.currentFeed = feedData;
+        this.allKeys = feedData.keys;
 
         this.showPage(0);
     };
@@ -204,7 +189,6 @@ if (!Function.prototype.bind) {
         var that = this;
         if (-1 !== this.currentPage) {
             this._transitionOut(
-                page,
                 function() {
                     that._transitionIn(page);
                 });
@@ -268,10 +252,10 @@ if (!Function.prototype.bind) {
             this.links[i].circle.animate(animation.delay(i * animationDelayMS));
         }
 
-        this.updatePath();
+        this._updatePath();
     };
 
-    Timeline.prototype.updatePath = function() {
+    Timeline.prototype._updatePath = function() {
         var splinePathString = 'M' + this.positions[0].x + ',' + this.positions[0].y + 'R';
         var flatPathString = 'M' + this.positions[0].x + ',' + this.positions[0].y;
         for (var i = 1, len = this.positions.length; i < len; i++) {
@@ -294,6 +278,47 @@ if (!Function.prototype.bind) {
             'path' : splinePathString,
             'opacity' : 1
         }, 200);
+    };
+
+    Timeline.prototype._transitionOut = function(callback) {
+        this.transitioningOut = true;
+
+        var that = this;
+        var numCalls = 0;
+        function onAnimationComplete() {
+            if (++numCalls === that.links.length + 1) {
+                // remove them all
+                for (var i = 0, len = that.links.length; i < len; i++) {
+                    that.links[i].circle.remove();
+                    that.links[i].title.remove();
+                }
+                that.links = [];
+
+                that.transitioningOut = false;
+
+                callback();
+            }
+        }
+
+        var tweenMS = 500;
+        var delayMS = 20;
+        var animation = Raphael.animation({'opacity' : 0}, tweenMS, onAnimationComplete);
+        for (var i = 0, len = this.links.length; i < len; i++) {
+            var delayedAnimation = animation.delay(i * delayMS);
+            this.links[i].circle.stop().animate(delayedAnimation);
+            this.links[i].title.stop().animate(delayedAnimation);
+        }
+    };
+
+    Timeline.prototype._transitionIn = function(page) {
+        this.transitioningOut = false;
+
+        this.currentPage = page;
+
+        this.setKeys(this.allKeys.slice(
+            this.currentPage * this.perPage,
+            (this.currentPage + 1) * this.perPage
+        ));
     };
 
     global.Timeline = Timeline;
