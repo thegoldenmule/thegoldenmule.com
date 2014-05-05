@@ -39,6 +39,65 @@
             model.add(data);
 
             if (++numLoaded === loaders.length) {
+                // add static stuff
+                model.add(new FeedData(
+                    'Projects',
+                    'https://github.com/thegoldenmule/',
+                    [
+                        {
+                            title: 'boX',
+                            link: 'https://github.com/thegoldenmule/boX'
+                        },
+                        {
+                            title: 'Realtime Clouds',
+                            link: 'https://github.com/thegoldenmule/RealtimeClouds'
+                        },
+                        {
+                            title: 'Story',
+                            link: 'https://github.com/thegoldenmule/story'
+                        },
+                        {
+                            title: 'Unitijection',
+                            link: 'https://github.com/thegoldenmule/Unitijection'
+                        },
+                        {
+                            title: 'Einstein',
+                            link: 'http://thegoldenmule.com/labs/EinsteinDemo/'
+                        },
+                        {
+                            title: 'Itsy',
+                            link: 'https://github.com/thegoldenmule/Itsy'
+                        },
+                        {
+                            title: 'Telemetrino',
+                            link: 'https://github.com/thegoldenmule/Telemetrino'
+                        },
+                        {
+                            title: 'Topology',
+                            link: 'https://github.com/thegoldenmule/Topology'
+                        },
+                        {
+                            title: '2D Terrain Generator',
+                            link: 'https://github.com/thegoldenmule/EasyTerrain'
+                        },
+                        {
+                            title: 'Spherical Terran Generation',
+                            link: 'http://thegoldenmule.com/labs/PlanarSphericalGen2/planardemo.html'
+                        },
+                        {
+                            title: 'Circle Physics',
+                            link: 'http://thegoldenmule.com/labs/CirclePhysics/'
+                        },
+                        {
+                            title: 'Porter\'s Stemming Algorithm',
+                            link: 'http://thegoldenmule.com/labs/PStem/'
+                        },
+                        {
+                            title: 'Scorched 3D: Now in 2D!',
+                            link: 'http://thegoldenmule.com/labs/Scorch3d/'
+                        }
+                    ]));
+
                 callback(model);
             }
         }
