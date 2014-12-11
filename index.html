@@ -2,25 +2,86 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
     <title>thegoldenmule</title>
 
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone.js"></script>
+
     <script src="Common.js"></script>
-    <script src="Feed.js"></script>
     <script src="Model.js"></script>
-    <script src="Timeline.js"></script>
+    <script src="Views.js"></script>
     <script src="Main.js"></script>
 
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-        google.load("feeds", "1");
-        google.setOnLoadCallback(initialize);
-    </script>
-
     <link rel="stylesheet" href="style.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body>
+<body onload="initialize()">
+    <!-- Templates -->
+    <script type="text/template" id="template_header">
+        <h2><%= title %></h2>
+    </script>
+
+    <script type="text/template" id="template_group">
+        <span class='h3 groupname'><%= title %></span>
+    </script>
+
+    <script type="text/template" id="template_element">
+        <div class='imgcontainer'>
+            <img
+                    class='imgentry'
+                    src='<%= img %>'
+                    data-header-name='<%= headername %>'
+                    data-element-name='<%= elementname %>'
+                    data-group-name='<%= groupname %>'>
+        </div>
+    </script>
+
+    <script type="text/template" id="template_description">
+        <h2><%= title %></h2>
+        <p><%= description %></p>
+        <a href='<%= url %>' target="_blank"><strong>Read More.</strong></a>
+    </script>
+    <!-- -->
+
+    <!-- Header -->
+    <div id="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-8">
+                    <h1><strong>thegoldenmule</strong></h1>
+                </div>
+                <div class="col-xs-4">
+                    <h3><a target="_blank" href="http://thegoldenmule.com/blog">Blog</a> | <a target="_blank" href="https://github.com/thegoldenmule">Github</a> | <a target="_blank" href="https://linkedin.com/in/benjaminmicahj">LinkedIn</a></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div id="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div id="headers"></div>
+                </div>
+                <div class="col-sm-6">
+                    <div id="groups"></div>
+                </div>
+                <div class="col-sm-4">
+                    <div id="descriptions"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="well"></div>
+    </div>
 </body>
-    <div id="content"></div>
+
 </html>

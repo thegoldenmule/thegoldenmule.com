@@ -8,102 +8,115 @@
     'use strict';
 
     global.initialize = function() {
-        new Main(1000, 600);
+        global.main = new Main(1000, 600);
     };
 
     function Main(width, height) {
         this.width = width;
         this.height = height;
 
-        this.paper = Raphael('content', this.width, this.height);
-        this.rect = this.paper.rect(0, 0, this.width, this.height, 50).attr({fill:'#111', stroke:'none'});
-
-        this.timeline = new Timeline(this.paper, this.width, this.height);
-
-        var loaders = [
-            new FeedLoader('Tech', 'http://thegoldenmule.com/blog/', 'http://thegoldenmule.com/blog/feed/'),
-            new FeedLoader('Thoughts', 'http://thegoldenmule.svbtle.com/', 'http://thegoldenmule.svbtle.com/feed')
-        ];
-
-        var that = this;
-        this.load(loaders, function(model) {
-            that.timeline.populate(model);
-        });
+        this.headers = document.getElementById('headers');
+        this.groups = document.getElementById('groups');
+        this.descriptions = document.getElementById('descriptions');
+        this.model = Model;
+        this.build();
     }
 
-    Main.prototype.load = function(loaders, callback) {
-        var model = new Model();
+    Main.prototype.build = function()
+    {
+        var headers = this.model.Headers;
+        for (var i = 0, ilen = headers.length; i < ilen; i++) {
+            var header = new HeaderView(headers[i]);
+            this.headers.appendChild(header.el);
+        }
 
-        var numLoaded = 0;
-        function onLoaded(data) {
-            model.add(data);
+        this.selectHeader(headers[0].Header);
+    };
 
-            if (++numLoaded === loaders.length) {
-                // add static stuff
-                model.add(new FeedData(
-                    'Projects',
-                    'https://github.com/thegoldenmule/',
-                    [
-                        {
-                            title: 'boX',
-                            link: 'https://github.com/thegoldenmule/boX'
-                        },
-                        {
-                            title: 'Realtime Clouds',
-                            link: 'https://github.com/thegoldenmule/RealtimeClouds'
-                        },
-                        {
-                            title: 'Story',
-                            link: 'https://github.com/thegoldenmule/story'
-                        },
-                        {
-                            title: 'Unitijection',
-                            link: 'https://github.com/thegoldenmule/Unitijection'
-                        },
-                        {
-                            title: 'Einstein',
-                            link: 'http://thegoldenmule.com/labs/EinsteinDemo/'
-                        },
-                        {
-                            title: 'Itsy',
-                            link: 'https://github.com/thegoldenmule/Itsy'
-                        },
-                        {
-                            title: 'Telemetrino',
-                            link: 'https://github.com/thegoldenmule/Telemetrino'
-                        },
-                        {
-                            title: 'Topology',
-                            link: 'https://github.com/thegoldenmule/Topology'
-                        },
-                        {
-                            title: '2D Terrain Generator',
-                            link: 'https://github.com/thegoldenmule/EasyTerrain'
-                        },
-                        {
-                            title: 'Spherical Terran Generation',
-                            link: 'http://thegoldenmule.com/labs/PlanarSphericalGen2/planardemo.html'
-                        },
-                        {
-                            title: 'Circle Physics',
-                            link: 'http://thegoldenmule.com/labs/CirclePhysics/'
-                        },
-                        {
-                            title: 'Porter\'s Stemming Algorithm',
-                            link: 'http://thegoldenmule.com/labs/PStem/'
-                        },
-                        {
-                            title: 'Scorched 3D: Now in 2D!',
-                            link: 'http://thegoldenmule.com/labs/Scorch3d/'
-                        }
-                    ]));
+    Main.prototype.selectHeader = function (headerName)
+    {
+        this.clearChildren(this.groups);
 
-                callback(model);
+        var groups = this.headerByName(headerName).Groups;
+        for (var i = 0, len = groups.length; i < len; i++) {
+            var group = new GroupView(headerName, groups[i]);
+            this.groups.appendChild(group.el);
+        }
+    };
+
+    Main.prototype.selectElement = function (headerName, groupName, elementName)
+    {
+        this.clearChildren(this.descriptions);
+
+        var element = this.elementByName(headerName, groupName, elementName);
+        if (null === element)
+        {
+            return;
+        }
+
+        var description = new DescriptionView(element);
+        this.descriptions.appendChild(description.el);
+    };
+
+    Main.prototype.headerByName = function(name)
+    {
+        var headers = this.model.Headers;
+        for (var i = 0, len = headers.length; i < len; i++)
+        {
+            if (headers[i].Header === name)
+            {
+                return headers[i];
             }
         }
 
-        for (var i = 0, len = loaders.length; i < len; i++) {
-            loaders[i].load(onLoaded);
+        return null;
+    };
+
+    Main.prototype.groupByName = function(headerName, groupName)
+    {
+        var header = this.headerByName(headerName);
+        if (null === header)
+        {
+            return null;
+        }
+
+        var groups = header.Groups;
+        for (var i = 0, len = groups.length; i < len; i++)
+        {
+            if (groups[i].Name === groupName)
+            {
+                return groups[i];
+            }
+        }
+
+        return null;
+    };
+
+    Main.prototype.elementByName = function(headerName, groupName, elementName)
+    {
+        var group = this.groupByName(headerName, groupName);
+        if (null === group)
+        {
+            return null;
+        }
+
+        var elements = group.Entries;
+        for (var i = 0, len = elements.length; i < len; i++)
+        {
+            if (elements[i].Name === elementName)
+            {
+                return elements[i];
+            }
+        }
+
+        return null;
+    };
+
+    Main.prototype.clearChildren = function(node)
+    {
+        while (node.firstChild)
+        {
+            node.removeChild(node.firstChild);
         }
     };
 

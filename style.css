@@ -1,14 +1,49 @@
-body
+#header
 {
-    background-color: #000;
+    padding-bottom: 50px;
 }
 
 #content
 {
-    height: 600px;
-    left: 50%;
-    margin: -300px 0 0 -500px;
+    overflow: auto;
+    padding-bottom: 150px;
+}
+
+.groupcontainer
+{
+    float: left;
+    padding: 10px;
+    clear:both;
+    background-color: #CCCCCC;
+    width:100%;
+}
+
+.groupname
+{
+    float:left;
+
+    clear:both;
+}
+
+.imgcontainer
+{
+    background-color: #000000;
+    width: 166px;
+    height: 166px;
+    float: left;
+    margin: 5px;
+
+    position: relative;
+}
+
+.imgentry
+{
     position: absolute;
-    top: 50%;
-    width: 1000px;
+    max-width: 100%;
+    max-height: 100%;
+
+    top:50%;
+    left:50%;
+
+    transform: translate(-50%, -50%);
 }
