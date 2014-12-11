@@ -16,7 +16,7 @@ var HeaderView = Backbone.View.extend({
     },
     select: function (event)
     {
-        main.selectHeader(event.target.innerHTML);
+        main.selectHeader(event.target, event.target.innerHTML);
     }
 });
 

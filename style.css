@@ -9,6 +9,11 @@
     padding-bottom: 150px;
 }
 
+.selected
+{
+    font-weight: bold;
+}
+
 .groupcontainer
 {
     float: left;

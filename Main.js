@@ -15,6 +15,8 @@
         this.width = width;
         this.height = height;
 
+        this._$selectedHeader = null;
+
         this.headers = document.getElementById('headers');
         this.groups = document.getElementById('groups');
         this.descriptions = document.getElementById('descriptions');
@@ -24,20 +26,35 @@
 
     Main.prototype.build = function()
     {
+        var selectedEl = null;
         var headers = this.model.Headers;
         for (var i = 0, ilen = headers.length; i < ilen; i++) {
             var header = new HeaderView(headers[i]);
-            this.headers.appendChild(header.el);
+            var appended = this.headers.appendChild(header.el);
+
+            if (0 === i)
+            {
+                selectedEl = appended;
+            }
         }
 
-        this.selectHeader(headers[0].Header);
+        this.selectHeader($(selectedEl).find('h2'), headers[0].Header);
     };
 
-    Main.prototype.selectHeader = function (headerName)
+    Main.prototype.selectHeader = function (element, headerName)
     {
         this.clearChildren(this.groups);
 
-        var groups = this.headerByName(headerName).Groups;
+        if (null != this._$selectedHeader)
+        {
+            this._$selectedHeader.toggleClass('selected');
+        }
+
+        this._$selectedHeader = $(element);
+        this._$selectedHeader.toggleClass('selected');
+
+        var header = this.headerByName(headerName);
+        var groups = header.Groups;
         for (var i = 0, len = groups.length; i < len; i++) {
             var group = new GroupView(headerName, groups[i]);
             this.groups.appendChild(group.el);
