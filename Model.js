@@ -97,6 +97,12 @@ var Model = {
                             "Description": "A web based metronome using metro-Bootstrap. Other web metronomes just suck.",
                             "URL": "https://github.com/thegoldenmule/Webtrono.me",
                             "ImageURL": "http://thegoldenmule.com/thumbnails/webtronome.png"
+                        },
+                        {
+                            "Name": "thegoldenmule.com",
+                            "Description": "THIS VERY WEBSITE! It uses buzzwords like 'underscore templates', 'jquery', and 'backbone'.",
+                            "URL": "#",
+                            "ImageURL": "http://thegoldenmule.com/thumbnails/thegoldenmule.png"
                         }
                     ]
                 }
@@ -129,6 +135,22 @@ var Model = {
                             "Description": "A simple game built with Cocos2d that expands on Minesweeper. Energy, biodiesel, unit types and actions-- lots of fun stuff!",
                             "URL": "https://bitbucket.org/benthehutt/all-mine/src/",
                             "ImageURL": "http://thegoldenmule.com/thumbnails/cocos.png"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Header": "C/C++",
+            "Groups": [
+                {
+                    "Name": "Graphics",
+                    "Entries": [
+                        {
+                            "Name": "Playing With Cinder",
+                            "Description": "My first project using Cinder. It's very simple, linking luma from a video capture source to various properties of a bunch of circles (in the biz we call them particles).",
+                            "URL": "https://github.com/thegoldenmule/CameraOutline",
+                            "ImageURL": "http://thegoldenmule.com/thumbnails/cinder.png"
                         }
                     ]
                 }

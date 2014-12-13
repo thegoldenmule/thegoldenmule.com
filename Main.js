@@ -8,13 +8,10 @@
     'use strict';
 
     global.initialize = function() {
-        global.main = new Main(1000, 600);
+        global.main = new Main();
     };
 
     function Main(width, height) {
-        this.width = width;
-        this.height = height;
-
         this._$selectedHeader = null;
 
         this.headers = document.getElementById('headers');
