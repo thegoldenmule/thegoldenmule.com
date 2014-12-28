@@ -119,6 +119,12 @@ var Model = {
                             "Description": "Story is a research project that leverages the Natural Language Toolkit and machine learning techniques for gaming. The goal is to use natural language input to describe an environment to a computer, which then makes choices about how to use the environment to accomplish some goal.",
                             "URL": "https://github.com/thegoldenmule/story",
                             "ImageURL": "http://thegoldenmule.com/thumbnails/vsdLA.png"
+                        },
+                        {
+                            "Name": "Email Backup",
+                            "Description": "A set of tools for backing up email. Yes, it sounds boring, but it was fun and I needed something simple.",
+                            "URL": "https://github.com/thegoldenmule/email-backup",
+                            "ImageURL": "http://thegoldenmule.com/thumbnails/ebackupUsage.png"
                         }
                     ]
                 }
